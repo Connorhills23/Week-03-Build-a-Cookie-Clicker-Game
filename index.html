@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🚗 Rim Clicker 🚗</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="left">
+      <h1>𖥕 Rim Clicker 𖥕</h1>
+      <h2 id="cash">💷 Cash: £0 💷</h2>
+      <h3 id="cps">💷 Cash per second: £0 💷</h3>
+
+      <!-- Spinning Rim Button -->
+      <div class="rim-button" onclick="clickRim()">
+        <img src="./image/rim.png" alt="Spinning Rim" />
+      </div>
+
+      <br />
+      <button class="save" onclick="saveGame()">💾 Save Garage 💾</button>
+    </div>
+
+    <div class="right">
+      <h2>🔧 Upgrades 🔧</h2>
+      <div id="upgrades"></div>
+
+      <h2>🏆 Achievements 🏆</h2>
+      <div id="achievements"></div>
+    </div>
+    <audio id="upgrade-sound" src="./audio/upgrade.mp3" preload="auto"></audio>
+    <audio
+      id="achievement-sound"
+      src="./audio/ACHIEVEMENT.mp3"
+      preload="auto"
+    ></audio>
+    <div class="options-dropdown">
+      <button id="options-button">⚙️ Options ⚙️</button>
+      <div id="options-menu" class="options-menu hidden">
+        <button id="mute-button">🔊 Mute 🔊</button>
+        <button id="reset-button">🔄 Reset Game 🔄</button>
+        <button id="change-wheel-button">🎨 Change Wheel</button>
+        <!-- Future options can go here -->
+      </div>
+    </div>
+  </body>
+  <footer>🚗𖥕🔧 Made By ConnorHills 🔧𖥕🚗</footer>
+</html>

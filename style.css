@@ -1,0 +1,229 @@
+/*Body & Layout*/
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #111, #333);
+  padding: 20px;
+  display: flex;
+  gap: 20px;
+  color: #eee;
+}
+
+.left,
+.right {
+  background: #1c1c1c;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+}
+
+.left {
+  flex: 1;
+  text-align: center;
+}
+
+.right {
+  flex: 1;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+h1 {
+  color: #ff4444;
+}
+
+/*Rim Button*/
+.rim-button {
+  width: 420px;
+  height: 420px;
+  margin: 0 auto;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: visible;
+}
+
+.rim-button img {
+  width: 360px;
+  height: 360px;
+  animation: spin 5s linear infinite;
+  transition: transform 0.2s ease;
+}
+.floating-text {
+  position: absolute;
+  color: orange;
+  font-weight: bold;
+  pointer-events: none;
+  animation: floatUp 1s ease-out forwards;
+  text-shadow: 0 0 10px orange;
+  font-size: 34px;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-40px) scale(1.2);
+  }
+}
+
+/*Click feedback*/
+.rim-button:active img {
+  transform: scale(0.85) rotate(360deg);
+  animation: spin-fast 0.3s linear;
+}
+
+/*Slow spin animation*/
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/*Fast spin animation on click*/
+@keyframes spin-fast {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/*Save Button*/
+button.save {
+  background: #4caf50;
+  padding: 12px 18px;
+  font-size: 16px;
+  border-radius: 6px;
+  margin-top: 10px;
+  cursor: pointer;
+  border: none;
+  transition:
+    background 0.2s,
+    transform 0.1s;
+}
+
+button.save:hover {
+  background: #66bb6a;
+}
+
+button.save:active {
+  transform: scale(0.95);
+}
+
+/*Upgrades*/
+.upgrade {
+  border-bottom: 1px solid #444;
+  padding: 10px 0;
+}
+
+.upgrade h4 {
+  margin: 0;
+  color: #ffcc00;
+}
+
+/*Upgrade buttons - bigger & easier to click*/
+.upgrade button {
+  padding: 14px 20px;
+  font-size: 18px;
+  border-radius: 8px;
+  background: #ff8800;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/*Hover effect*/
+.upgrade button:hover:not(:disabled) {
+  background: #ffaa33;
+  transform: scale(1.05);
+}
+
+/*Disabled buttons*/
+.upgrade button:disabled {
+  background: #555;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/*Achievements*/
+.achievement {
+  padding: 8px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  background: #333;
+  font-size: 14px;
+}
+
+.achievement.unlocked {
+  background: #2e7d32;
+  color: #c8facc;
+}
+button.reset {
+  background: #f44336;
+  padding: 12px 18px;
+  font-size: 16px;
+  border-radius: 6px;
+  margin-top: 10px;
+  cursor: pointer;
+  border: none;
+}
+
+button.reset:hover {
+  background: #e57373;
+}
+
+button.reset:active {
+  transform: scale(0.95);
+}
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
+}
+
+/*MUTE BUTTON*/
+
+.options-dropdown {
+  position: fixed;
+  top: 40px;
+  left: 35px;
+}
+
+.options-menu {
+  display: flex;
+  flex-direction: column;
+  background: #000000;
+  padding: 10px;
+  border-radius: 6px;
+  margin-top: 5px;
+}
+
+.options-menu.hidden {
+  display: none;
+}
+
+.options-menu button {
+  margin: 5px 0;
+  background: #444;
+  color: gold;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.options-menu button:hover {
+  background: #666;
+}
