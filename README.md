@@ -1,2 +1,5 @@
 # Week-03-Build-a-Cookie-Clicker-Game
 Week 03: Build a Cookie Clicker Game
+
+
+First offer start off with the the main part of the game where you can actually click on the wheel to earn cash as you can see at the bottom you can see save garage so that will save the entire game for you and when you do close the game down an reload the game back up it will automatically load your save from local storage on the right hand side you'll see all types of upgrades as you click you earn cash an upgrades and then and more on the right hand side you'll see achievements the more achievements you earn the more clicks per second you can get On the left hand side you have a menu options you can mute sounds you can reset your game and even change the style of the wheel  As you earn achievements there is an achievement sound and also when you Click to buy an upgrade you will have an impact sound as it feels like  being in  a real mechanic garage when clicking When clicking the wheel it will gain you your cash and you will see orange symbols showing how much money you will be earning
