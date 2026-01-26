@@ -5,8 +5,9 @@ let cash = 0;
 let cps = 0;
 let clickPower = 1;
 let autoClickers = 0;
+let isMuted = false;
 
-/* ================= UPGRADES ================= */
+/* ================= BUILT-IN UPGRADES ================= */
 const upgrades = [
   {
     id: 1,
@@ -49,6 +50,30 @@ const upgrades = [
     type: "cps",
   },
   {
+    id: 6,
+    name: "Grip Gloves",
+    cost: 30,
+    increase: 1,
+    owned: 0,
+    type: "click",
+  },
+  {
+    id: 7,
+    name: "Power Wrist",
+    cost: 1500,
+    increase: 5,
+    owned: 0,
+    type: "click",
+  },
+  {
+    id: 8,
+    name: "Auto Rim Spinner",
+    cost: 2000,
+    increase: 1,
+    owned: 0,
+    type: "auto",
+  },
+  {
     id: 9,
     name: "Carbon Fiber Rim Line",
     cost: 15000,
@@ -80,24 +105,6 @@ const upgrades = [
     owned: 0,
     type: "cps",
   },
-
-  /* ================= CLICK UPGRADES ================= */
-  {
-    id: 6,
-    name: "Grip Gloves",
-    cost: 30,
-    increase: 1,
-    owned: 0,
-    type: "click",
-  },
-  {
-    id: 7,
-    name: "Power Wrist",
-    cost: 1500,
-    increase: 5,
-    owned: 0,
-    type: "click",
-  },
   {
     id: 13,
     name: "Titanium Knuckles",
@@ -121,16 +128,6 @@ const upgrades = [
     increase: 100,
     owned: 0,
     type: "click",
-  },
-
-  /* ================= AUTO CLICKERS ================= */
-  {
-    id: 8,
-    name: "Auto Rim Spinner",
-    cost: 2000,
-    increase: 1,
-    owned: 0,
-    type: "auto",
   },
   {
     id: 16,
@@ -158,8 +155,8 @@ const upgrades = [
   },
 ];
 
+/* ================= ACHIEVEMENTS ================= */
 const achievements = [
-  /* ================= EARLY GAME ================= */
   {
     name: "🛞 First Rim",
     reward: 1,
@@ -184,8 +181,6 @@ const achievements = [
     unlocked: false,
     check: () => upgrades.reduce((s, u) => s + u.owned, 0) >= 15,
   },
-
-  /* ================= MID GAME ================= */
   {
     name: "🚀 Rim Tycoon",
     reward: 50,
@@ -210,8 +205,6 @@ const achievements = [
     unlocked: false,
     check: () => autoClickers >= 10,
   },
-
-  /* ================= LATE GAME ================= */
   {
     name: "🏰 Rim Mogul",
     reward: 100,
@@ -236,8 +229,6 @@ const achievements = [
     unlocked: false,
     check: () => autoClickers >= 25,
   },
-
-  /* ================= SPECIAL / FUN ================= */
   {
     name: "🎯 Perfectionist",
     reward: 50,
@@ -258,8 +249,10 @@ function clickRim() {
   showFloatingText(clickPower);
 
   const rim = document.querySelector(".rim-button img");
-  rim.classList.add("clicked");
-  setTimeout(() => rim.classList.remove("clicked"), 150);
+  if (rim) {
+    rim.classList.add("clicked");
+    setTimeout(() => rim.classList.remove("clicked"), 150);
+  }
 
   updateUI();
 }
@@ -277,7 +270,6 @@ function buyUpgrade(id) {
   if (u.type === "click") clickPower += u.increase;
   if (u.type === "auto") autoClickers += u.increase;
 
-  // Play upgrade sound
   if (!isMuted) {
     const sound = document.getElementById("upgrade-sound");
     if (sound) {
@@ -299,9 +291,9 @@ function showFloatingText(amount) {
   const el = document.createElement("div");
   el.className = "floating-text";
   el.textContent = `+£${amount}`;
-
-  el.style.left = Math.random() * 60 + 20 + "%";
-  el.style.top = Math.random() * 60 + 20 + "%";
+  el.style.left = "50%";
+  el.style.top = "30%";
+  el.style.transform = "translate(-50%, -50%)";
 
   rimBtn.appendChild(el);
   setTimeout(() => el.remove(), 1000);
@@ -313,7 +305,6 @@ function updateUI() {
   document.getElementById("cps").textContent =
     `CPS: £${cps} | Click: £${clickPower}`;
 
-  // Enable / disable buttons WITHOUT re-rendering
   upgrades.forEach((u) => {
     const btn = document.getElementById(`buy-${u.id}`);
     if (btn) btn.disabled = cash < u.cost;
@@ -322,6 +313,7 @@ function updateUI() {
 
 function renderUpgrades() {
   const el = document.getElementById("upgrades");
+  if (!el) return;
   el.innerHTML = "";
 
   upgrades.forEach((u) => {
@@ -331,9 +323,7 @@ function renderUpgrades() {
         <p>Owned: ${u.owned}</p>
         <p>+${u.increase} ${u.type.toUpperCase()}</p>
         <p>Cost: £${u.cost}</p>
-        <button id="buy-${u.id}" onclick="buyUpgrade(${u.id})">
-          Buy
-        </button>
+        <button id="buy-${u.id}" onclick="buyUpgrade(${u.id})">Buy</button>
       </div>
     `;
   });
@@ -341,14 +331,11 @@ function renderUpgrades() {
 
 function renderAchievements() {
   const el = document.getElementById("achievements");
+  if (!el) return;
   el.innerHTML = "";
 
   achievements.forEach((a) => {
-    el.innerHTML += `
-      <div class="achievement ${a.unlocked ? "unlocked" : ""}">
-        ${a.name} (+${a.reward} CPS)
-      </div>
-    `;
+    el.innerHTML += `<div class="achievement ${a.unlocked ? "unlocked" : ""}">${a.name} (+${a.reward} CPS)</div>`;
   });
 }
 
@@ -363,7 +350,7 @@ function checkAchievements() {
     }
   });
 }
-/* ================= ACHIEVEMENT SOUND ================= */
+
 function showAchievementPopup(name, reward) {
   if (!isMuted) {
     const sound = document.getElementById("achievement-sound");
@@ -375,15 +362,17 @@ function showAchievementPopup(name, reward) {
 
   const p = document.createElement("div");
   p.textContent = `🏆 ${name} (+${reward} CPS)`;
-  p.style.position = "fixed";
-  p.style.top = "20px";
-  p.style.left = "50%";
-  p.style.transform = "translateX(-50%)";
-  p.style.background = "#222";
-  p.style.color = "#0f0";
-  p.style.padding = "10px 20px";
-  p.style.borderRadius = "6px";
-  p.style.zIndex = 9999;
+  Object.assign(p.style, {
+    position: "fixed",
+    top: "20px",
+    left: "50%",
+    transform: "translateX(-50%)",
+    background: "#222",
+    color: "#0f0",
+    padding: "10px 20px",
+    borderRadius: "6px",
+    zIndex: 9999,
+  });
   document.body.appendChild(p);
   setTimeout(() => p.remove(), 10000);
 }
@@ -397,7 +386,11 @@ function saveGame() {
       cps,
       clickPower,
       autoClickers,
-      upgrades: upgrades.map((u) => ({ owned: u.owned, cost: u.cost })),
+      upgrades: upgrades.map((u) => ({
+        id: u.id,
+        owned: u.owned,
+        cost: u.cost,
+      })),
       achievements: achievements.map((a) => a.unlocked),
     }),
   );
@@ -413,10 +406,11 @@ function loadGame() {
   clickPower = save.clickPower ?? 1;
   autoClickers = save.autoClickers ?? 0;
 
-  save.upgrades?.forEach((s, i) => {
-    if (upgrades[i]) {
-      upgrades[i].owned = s.owned;
-      upgrades[i].cost = s.cost;
+  save.upgrades?.forEach((savedUpgrade) => {
+    const u = upgrades.find((x) => x.id === savedUpgrade.id);
+    if (u) {
+      u.owned = savedUpgrade.owned;
+      u.cost = savedUpgrade.cost;
     }
   });
 
@@ -431,44 +425,29 @@ function resetGame() {
   localStorage.removeItem(SAVE_KEY);
   location.reload();
 }
-/* ================= MUTE ================= */
 
-// toggle mute
+/* ================= MUTE ================= */
 function toggleMute() {
   isMuted = !isMuted;
-
-  // Update button text
   const btn = document.getElementById("mute-button");
-  btn.textContent = isMuted ? "🔇 Muted" : "🔊 Unmuted";
+  if (btn) btn.textContent = isMuted ? "🔇 Muted" : "🔊 Unmuted";
 }
 
-// hook button
-document.getElementById("mute-button").addEventListener("click", toggleMute);
-
 /* ================= LOOPS ================= */
-
-// Passive income (lightweight)
 setInterval(() => {
   cash += cps / 10;
-
   if (autoClickers > 0) {
-    cash += (autoClickers * clickPower) / 10;
+    upgrades
+      .filter((u) => u.type === "auto")
+      .forEach((u) => {
+        cash += (u.owned * u.increase) / 10;
+      });
   }
-
   updateUI();
 }, 100);
 
-// Achievement checks
 setInterval(checkAchievements, 500);
-
-// Save throttling
 setInterval(saveGame, 3000);
-
-/* ================= INIT ================= */
-loadGame();
-renderUpgrades();
-renderAchievements();
-updateUI();
 
 // toggle dropdown menu
 const optionsButton = document.getElementById("options-button");
@@ -476,15 +455,6 @@ const optionsMenu = document.getElementById("options-menu");
 
 optionsButton.addEventListener("click", () => {
   optionsMenu.classList.toggle("hidden");
-});
-
-// global mute state
-let isMuted = false;
-
-const muteButton = document.getElementById("mute-button");
-muteButton.addEventListener("click", () => {
-  isMuted = !isMuted;
-  muteButton.textContent = isMuted ? "🔇 Muted" : "🔊 Unmuted";
 });
 
 // reset button
@@ -496,20 +466,55 @@ resetButton.addEventListener("click", () => {
   }
 });
 
-// Array of wheel image paths
+/* ================= WHEEL IMAGES ================= */
 const wheelImages = ["image/rim1.png", "image/rim2.png", "image/rim3.png"];
-
-let currentWheelIndex = 1; // track which wheel is currently shown
-
+let currentWheelIndex = 0;
 const wheelButtonImg = document.querySelector(".rim-button img");
 const changeWheelButton = document.getElementById("change-wheel-button");
 
-changeWheelButton.addEventListener("click", () => {
-  // cycle index
-  currentWheelIndex = (currentWheelIndex + 1) % wheelImages.length;
+if (changeWheelButton) {
+  changeWheelButton.addEventListener("click", () => {
+    currentWheelIndex = (currentWheelIndex + 1) % wheelImages.length;
+    if (wheelButtonImg) wheelButtonImg.src = wheelImages[currentWheelIndex];
+  });
+}
 
-  // update image
-  if (wheelButtonImg) {
-    wheelButtonImg.src = wheelImages[currentWheelIndex];
+/* ================= FETCH LOCAL UPGRADES ================= */
+async function fetchUpgrades() {
+  try {
+    const response = await fetch("upgrades.json"); // Local JSON file
+    if (!response.ok) throw new Error("Failed to fetch upgrades");
+
+    const data = await response.json();
+    if (!Array.isArray(data)) {
+      console.error("Upgrades JSON is not an array");
+      return;
+    }
+
+    const apiUpgrades = data.map((item) => ({
+      id: item.id,
+      name: item.name,
+      cost: item.cost,
+      increase: item.increase,
+      owned: 0,
+      type: item.type,
+    }));
+
+    upgrades.push(...apiUpgrades);
+    renderUpgrades();
+    updateUI();
+    loadGame(); // apply saved states if any
+  } catch (err) {
+    console.error("Error fetching upgrades:", err);
   }
-});
+}
+
+/* ================= INIT ================= */
+document.getElementById("mute-button")?.addEventListener("click", toggleMute);
+document.getElementById("reset-button")?.addEventListener("click", resetGame);
+
+fetchUpgrades();
+loadGame();
+renderUpgrades();
+renderAchievements();
+updateUI();
