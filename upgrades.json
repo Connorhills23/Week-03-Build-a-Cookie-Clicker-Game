@@ -1,0 +1,16 @@
+[
+  {
+    "id": 101,
+    "name": "Diamond Rim",
+    "cost": 100000,
+    "increase": 500,
+    "type": "cps"
+  },
+  {
+    "id": 102,
+    "name": "Titanium Spinner",
+    "cost": 250000,
+    "increase": 100,
+    "type": "click"
+  }
+]
